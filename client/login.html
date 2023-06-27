@@ -1,0 +1,35 @@
+<!-- login.html -->
+<!-- App login page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+</head>
+<body>
+    <div class="wrap">
+        <div class="container">
+            <form action="" id="login-form" class="needs-validation" novalidate>
+                <h1 id="login-header-text">Login</h1>
+                <div class="mb-3" id="username-input-area">
+                    <input type="text" id="username-input" class="form-control" placeholder="Username" required>
+                    <div class="invalid-feedback">Username cannot be empty.</div>
+                </div>
+                <div class="mb-3" id="password-input-area">
+                    <input type="password" id="password-input" class="form-control" placeholder="Password" required>
+                    <div class="invalid-feedback">Password cannot be empty.</div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary" onclick="">Submit</button>
+                </div>
+                <ul id="already-have-account">
+                    <li>Not having account?</li>
+                    <li><a href="signup.html">Sign Up</a></li>
+                </ul>
+            </form>
+        </div>
+        <script type="module" src="./js/login.js"></script>
+    </div>
+    
+</body>
+</html>

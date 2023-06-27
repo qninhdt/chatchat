@@ -1,0 +1,19 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.wrap {
+    width: 600px;
+    margin: auto;
+}
+
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#already-have-account {
+    margin-top: 10px;
+    padding: 0;
+    li {
+        display: inline;
+    }
+}
