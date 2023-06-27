@@ -26,9 +26,35 @@ const checkInvalid = function()
     })
 }
 
+//Check if the given username or password is valid
+const infoFirstCheck = function(username, password) {
+    let usernameRegExPattern = /[a-zA-Z0-9_]/g
+    if (username.match(usernameRegExPattern) == null || username.match(usernameRegExPattern).length != username.length)
+    {
+        alert("The username can only contain letters of any cases, number and underscore symbol (_).")
+        return 0
+    }
+    let passwordRegExPattern = /[^ ]/g
+    if (password.match(passwordRegExPattern) == null || password.match(passwordRegExPattern).length != password.length)
+    {
+        alert("The password cannot contain spaces.")
+        return 0
+    }
+    if (password.length < 6)
+    {
+        alert("Password length must be at least 6.")
+        return 0
+    }
+    if (password != passwordRetype.value) 
+    {
+        alert("Password retype does not match.")
+        return 0
+    }
+    return 1
+}
+
 //Send the registered credits to the server after submitting
-//Please give me validation information (passed or not, why not passed)
-loginForm.addEventListener("submit", () => {
+loginForm.addEventListener("submit", (e) => {
     e.preventDefault()
 
     let usernameInput = document.getElementById("username-input")
@@ -45,37 +71,15 @@ loginForm.addEventListener("submit", () => {
     let username = usernameInput.value
     let password = passwordInput.value
 
-    let isValid = 1
+    let isValid = infoFirstCheck(username, password)
 
-    // let usernameRegExPattern = /[a-zA-Z0-9_]*/
-    // if (username.match(usernameRegExPattern)) 
-    // {
-    //     alert("The username can only contain letters of any cases, number and underscore symbol (_)")
-    //     isValid = 0;
-    // }
-    // let passwordRegExPattern = /[^ ]*/
-    // if (password.match(passwordRegExPattern)) 
-    // {
-    //     alert("The password cannot contain spaces")
-    //     isValid = 0;
-    // }
-    // if (password.length < 6)
-    // {
-    //     alert("Your password is too short")
-    //     isValid = 0;
-    // }
-    // if (password != passwordRetype) 
-    // {
-    //     alert("Your password retype does not match")
-    //     isValid = 0
-    // }
-
+    //Post {username, password} to the server
+    //Please give me validation information (passed or not) (new username cannot coincide with registered ones)
     fetch(server, {
         method: "POST",
         body: JSON.stringify({
             username: usernameInput.value,
             password: passwordInput.value,
-            passwordRetype: passwordRetype.value
         })
     })
     .then((response) => (response.json()))
@@ -87,11 +91,8 @@ loginForm.addEventListener("submit", () => {
     {
         alert("Successfully registered.")
         location.href = "chat.html"
+        localStorage.setItem("username", username)
     }
-
-    usernameInput.value = ""
-    passwordInput.value = ""
-    passwordRetype.value = ""
 })
 
 checkInvalid();

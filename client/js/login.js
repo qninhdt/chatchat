@@ -57,11 +57,12 @@ loginForm.addEventListener("submit", () => {
     {
         alert("Successfully logged in.")
         location.href = "chat.html"
+        localStorage.setItem("username", username)
     }
     else alert("Your credientials does not match any registered accounts.")
 
-    usernameInput.value = ""
-    passwordInput.value = ""
+    // usernameInput.value = ""
+    // passwordInput.value = ""
 })
 
 checkInvalid();
