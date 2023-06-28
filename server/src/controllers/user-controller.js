@@ -1,3 +1,5 @@
+const { socketMap } = require('../socket');
+
 const fakeUsers = [
     {
         _id: '0',
@@ -25,10 +27,12 @@ const fakeUsers = [
     },
 ];
 
+// GET /api/users
 function getUsersController(req, res) {
     res.status(200).json(fakeUsers);
 }
 
+// GET /api/users/:id
 function getUserController(req, res) {
     const user = fakeUsers.find((user) => user._id === req.params.id);
 
@@ -39,6 +43,29 @@ function getUserController(req, res) {
     res.status(200).json();
 }
 
-function addFriendController() {}
+// POST /api/friends
+function addFriendController(req, res) {
+    // emit event to 2 users
+    const users = [req.user._id, req.body.friend_id];
 
-module.exports = { fakeUsers, getUsersController, getUserController };
+    users.forEach((user, idx) => {
+        const sockets = socketMap.get(user);
+        if (!sockets) {
+            return;
+        }
+        sockets.forEach((socket) => {
+            socket.emit('new_friend', { friend_id: users[1 - idx] });
+        });
+    });
+
+    res.status(201).json({
+        message: `Friend added successfully`,
+    });
+}
+
+module.exports = {
+    fakeUsers,
+    getUsersController,
+    getUserController,
+    addFriendController,
+};

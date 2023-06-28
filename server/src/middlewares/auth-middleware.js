@@ -12,6 +12,7 @@ function authMiddleware(req, res, next) {
         }
 
         req.user = {
+            _id: decoded._id,
             username: decoded.username,
         };
 
