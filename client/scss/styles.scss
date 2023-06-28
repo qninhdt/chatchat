@@ -17,3 +17,30 @@ h1 {
         display: inline;
     }
 }
+
+.login-status {
+    margin-top: 10px;
+    text-align: right;
+    li {
+        display: inline;
+    }
+    #current-user {
+        font-size: small;
+        color: gray;
+    }
+    button {
+        --bs-btn-padding-y: .25rem; 
+        --bs-btn-padding-x: .5rem; 
+        --bs-btn-font-size: .75rem;
+    }
+}
+
+.friend-list {
+    li {
+        button{
+            text-align: left;
+        }
+        list-style-type: none;
+        margin-bottom: 10px;
+    }
+}
