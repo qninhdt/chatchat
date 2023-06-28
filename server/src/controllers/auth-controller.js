@@ -25,6 +25,12 @@ function loginController(req, res) {
 function signupController(req, res) {
     const { username, password } = req.body;
 
+    let exist = fakeUsers.find((user) => user.username === username);
+
+    if (exist) {
+        return res.status(404).json({ message: 'Username is exist' });
+    }
+
     const token = jwt.sign({ username }, process.env.TOKEN_SECRET);
 
     res.status(200).json({ token, message: 'Signup successfully' });
