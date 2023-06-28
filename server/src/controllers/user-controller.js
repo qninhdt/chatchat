@@ -39,4 +39,6 @@ function getUserController(req, res) {
     res.status(200).json();
 }
 
+function addFriendController() {}
+
 module.exports = { fakeUsers, getUsersController, getUserController };
