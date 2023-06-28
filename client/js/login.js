@@ -36,8 +36,8 @@ const getServerResponse = async function (username, password) {
     let response = await fetch(server, {
         method: 'POST',
         headers: {
-            "Content-Type": "application/json"
-        },      
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
             username: username,
             password: password,
@@ -45,9 +45,11 @@ const getServerResponse = async function (username, password) {
     });
     // localStorage.setItem('jwtToken', token);
     let json = await response.json();
-    // console.log(json);
+    let jwtToken = await json.token;
+    localStorage.setItem('jwtToken', jwtToken);
 
     if (json.message == 'Login successfully') {
+        console.log(json);
         alert('Successfully logged in.');
         return 1;
     }

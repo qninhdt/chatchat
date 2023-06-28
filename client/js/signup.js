@@ -77,6 +77,9 @@ const getServerResponse = async function (username, password, password2) {
     });
     // localStorage.setItem('jwtToken', token);
     let json = await response.json();
+    let jwtToken = await json.token;
+    localStorage.setItem('jwtToken', jwtToken);
+
     // localStorage.setItem("jwtToken", token)
 
 
