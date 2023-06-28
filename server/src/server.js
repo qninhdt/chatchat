@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoute = require('./routes/auth-route');
 const userRoute = require('./routes/user-route');
+const groupRoute = require('./routes/group-route');
 const { createSocketServer } = require('./socket');
 
 const app = express();
@@ -17,6 +18,7 @@ const route = express.Router();
 
 route.use(authRoute);
 route.use(userRoute);
+route.use(groupRoute);
 
 app.use('/api', route);
 
