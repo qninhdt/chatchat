@@ -5,7 +5,7 @@ import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
-const server = '/api/signup';
+const server = 'http://localhost:8000/api/signup';
 
 let loginForm = document.getElementById('login-form');
 
@@ -65,15 +65,18 @@ const infoFirstCheck = function (username, password, password2) {
 const getServerResponse = async function (username, password, password2) {
     if (!infoFirstCheck(username, password, password2)) return 0;
 
-    // let token = jwt.sign({ username: username }, password);
-    let token = "me may beo"
     let response = await fetch(server, {
         method: 'POST',
-        body: {
+        headers: {
+            "Content-Type": "application/json"
+        },      
+        body: JSON.stringify({
             username: username,
-            password: password
-        },
+            password: password,
+        }),
     });
+    // localStorage.setItem('jwtToken', token);
+    let json = await response.json();
     // localStorage.setItem("jwtToken", token)
 
 

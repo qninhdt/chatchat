@@ -6,7 +6,7 @@ import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
-const server = '/api/login';
+const server = 'http://localhost:8000/api/login';
 
 let loginForm = document.getElementById('login-form');
 
@@ -35,15 +35,25 @@ const checkInvalid = function () {
 const getServerResponse = async function (username, password) {
     let response = await fetch(server, {
         method: 'POST',
-        body: {
+        headers: {
+            "Content-Type": "application/json"
+        },      
+        body: JSON.stringify({
             username: username,
-            password: password
-        },
+            password: password,
+        }),
     });
     // localStorage.setItem('jwtToken', token);
-    let json = response.json;
+    let json = await response.json();
+    // console.log(json);
 
-    return 1;
+    if (json.message == 'Login successfully') {
+        alert('Successfully logged in.');
+        return 1;
+    }
+
+    alert('Your credientials do not match any of the registered accounts.');
+    return 0;
 };
 
 //Send the login credits to the server after submitting
@@ -63,7 +73,6 @@ loginForm.addEventListener('submit', async function (e) {
 
     let isValid = await getServerResponse(username, password);
     if (isValid) {
-        alert('Successfully logged in.');
         location.href = 'friendlist.html';
         localStorage.setItem('username', username);
     }
