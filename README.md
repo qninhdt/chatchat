@@ -30,6 +30,7 @@ Socket IO:
 Database: 
 
 <h3>DATABASE<h3>
+
 User Model:
 - _id
 - username
