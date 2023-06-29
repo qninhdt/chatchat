@@ -68,8 +68,8 @@ const getServerResponse = async function (username, password, password2) {
     let response = await fetch(server, {
         method: 'POST',
         headers: {
-            "Content-Type": "application/json"
-        },      
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
             username: username,
             password: password,
@@ -77,11 +77,16 @@ const getServerResponse = async function (username, password, password2) {
     });
     // localStorage.setItem('jwtToken', token);
     let json = await response.json();
+    let status = response.status;
+    if (status == 404) {
+        alert('This username has already been taken.');
+        return 0;
+    }
+
     let jwtToken = await json.token;
     localStorage.setItem('jwtToken', jwtToken);
 
     // localStorage.setItem("jwtToken", token)
-
 
     return 1;
 };
@@ -105,15 +110,18 @@ loginForm.addEventListener('submit', async function (e) {
     let username = usernameInput.value;
     let password = passwordInput.value;
 
-    let isValid = await getServerResponse(username, password, passwordRetype.value);
+    let isValid = await getServerResponse(
+        username,
+        password,
+        passwordRetype.value,
+    );
     if (isValid) {
         alert('Successfully registered.');
         location.href = 'friendlist.html';
         localStorage.setItem('username', username);
     }
-    
-    localStorage.setItem("curUser", username)
-    
+
+    localStorage.setItem('curUser', username);
 });
 
 checkInvalid();
