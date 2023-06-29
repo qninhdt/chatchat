@@ -9,11 +9,16 @@ if (localStorage.getItem('chatGroup') == null)
     location.href = 'friendlist.html';
 if (localStorage.getItem('username') == null) location.href = 'index.html';
 
+//Get current user's info as JSON
+const getCurUserInfo = function () {
+    return JSON.parse(localStorage.getItem('userInfo'));
+};
+
 //Who logged in?
 let currentUser = document.getElementById('current-user');
-currentUser.innerHTML = `Logged in as <strong>${localStorage.getItem(
-    'username',
-)}</strong> `;
+currentUser.innerHTML = `Logged in as <strong>${
+    getCurUserInfo().display_name
+}</strong> `;
 
 //Log out
 let logOutButton = document.getElementById('log-out-btn');
@@ -52,7 +57,7 @@ const getMessages = async function (offset, limit) {
         },
     );
     let json = await response.json();
-    return json;
+    return json.messages;
 };
 
 //Classify the messages got in the last function
@@ -96,17 +101,27 @@ let socket = io();
 let messageInputForm = document.getElementById('message-input-form');
 var messageInput = document.getElementById('message-input');
 
-form.addEventListener('submit', function (e) {
+messageInputForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (messageInput.value) {
-        socket.emit('new_message', messageInput.value, username);
-        input.value = '';
+        socket.emit('new_message', {
+            content: messageInput.value,
+            group_id: localStorage.getItem('chatGroup'),
+        });
+        let message = {
+            content: messageInput.value,
+            type: 'host-message',
+            displayType: 'primary',
+        };
+        messageInput.value = '';
+        addMessageToDisplay(message);
     }
 });
 
-socket.on('new_message', (msg, username) => {
-    let message = {content: msg};
-    if (username == localStorage.getItem('username')) message.type = 'host-message';
-    else message.type = 'guest-message';
+socket.on('new_message', (response) => {
+    let message = { content: response.content };
+    // if (sender_id == getCurUserInfo().sender_id) message.type = 'host-message';
+    message.type = 'guest-message';
+    message.displayType = 'secondary';
     addMessageToDisplay(message);
-})
+});

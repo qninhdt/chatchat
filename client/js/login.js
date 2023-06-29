@@ -49,8 +49,10 @@ const getServerResponse = async function (username, password) {
     localStorage.setItem('jwtToken', jwtToken);
 
     if (json.message == 'Login successfully') {
-        console.log(json);
+        // console.log(json);
         alert('Successfully logged in.');
+        localStorage.setItem('userInfo', JSON.stringify(json.user));
+        console.log(`[login.js] json = ${json}`);
         return 1;
     }
 
