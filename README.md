@@ -30,6 +30,7 @@ Socket IO:
 Database: 
 
 <h3>DATABASE<h3>
+
 User Model:
 - _id
 - username
@@ -53,10 +54,10 @@ Lưu ý: Các hàm dưới đây đều là hàm bất đồng bộ; nên trong 
 -   user:
     -   async getUserById(id) -> User
     -   async getUserByUsername(userName) -> User
-    -   async createUser(username, md5(password))
-    -   async addFriend(user1, user2) (them vao nhom + them vao danh sach ban be)
+    -   async createUser(username, md5(password)) -> User
+    -   async addFriend(user1, user2) (them vao nhom + them vao danh sach ban be) -> True/False
 -   messages:
-    -   async getMessages(group_id, offset, limit)
-    -   async createMessage(sender_id, group_id, content)
+    -   async getMessages(group_id, offset, limit) -> list of message
+    -   async createMessage(sender_id, group_id, content) -> True/False
 -   group:
-    - async createGroup(listmember) -> Tạo nhóm
+    - async createGroup(listmember) -> True/Falses

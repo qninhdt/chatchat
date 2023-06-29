@@ -60,7 +60,7 @@ module.exports = {
      * @param {String} userName username
      * @param {String} passWord md5 code of password
      * @param {String} displayName user's display name
-     * @returns True if account is successful created
+     * @returns null if account is unsuccessful created, otherwise the informations about that user
      */
     createUser: async function (userName, passWord, displayName) {
         let newUser = new userModel({
@@ -69,19 +69,19 @@ module.exports = {
             display_name: displayName,
         });
 
-        let successCreatedUser = false;
+        let userDocs = null;
 
         await newUser
             .save()
-            .then((success) => {
-                successCreatedUser = true;
+            .then((docs) => {
+                userDocs = docs;
             })
             .catch((err) => {
+                userDocs = null;
                 console.log(err);
-                successCreatedUser = false;
             });
 
-        return successCreatedUser;
+        return userDocs;
     },
 
     /**
