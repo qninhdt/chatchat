@@ -44,7 +44,7 @@ module.exports = {
         let newMessage = new messageModel({
             groupId: _groupId,
             senderId: _senderId,
-            conntent: _content,
+            content: _content,
         });
 
         let isSent = false;

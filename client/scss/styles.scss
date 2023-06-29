@@ -46,6 +46,12 @@ h1 {
     }
 }
 
+#chat-guest {
+    h1 {
+        text-align: left;
+    }
+}
+
 .message-area {
     display: flex;
     flex-direction: column;
@@ -68,14 +74,15 @@ h1 {
 }
 
 #message-input-form {
-    position: fixed; 
-    bottom: 0; 
-    left: 0;
-    right: 0;
+    // position: fixed; 
+    // bottom: 0; 
+    // left: 0;
+    // right: 0;
     display: flex; 
     width: 600px;
     margin: auto;
     padding: 0.25rem;
+    background: rgba(0, 0, 0, 0.15);
     input {
         flex-grow: 1;
         border-radius: 0.5rem;
