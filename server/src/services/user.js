@@ -60,7 +60,7 @@ module.exports = {
      * @param {String} userName username
      * @param {String} passWord md5 code of password
      * @param {String} displayName user's display name
-     * @returns null if account is unsuccessful created, otherwise the informations about that's user
+     * @returns null if account is unsuccessful created, otherwise the informations about that user
      */
     createUser: async function (userName, passWord, displayName) {
         let newUser = new userModel({
