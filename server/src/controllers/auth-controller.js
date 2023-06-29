@@ -19,7 +19,12 @@ async function loginController(req, res) {
                 process.env.TOKEN_SECRET,
             );
 
-            res.status(200).json({ token, message: 'Login successfully' });
+            delete user._doc.password;
+            res.status(200).json({
+                token,
+                message: 'Login successfully',
+                user,
+            });
         } else {
             res.status(401).json({ message: 'Password is incorrect' });
         }
@@ -51,7 +56,14 @@ async function signupController(req, res) {
 
     const token = jwt.sign({ username }, process.env.TOKEN_SECRET);
 
-    res.status(200).json({ token, message: 'Signup successfully' });
+    const newUser = await getUserByUsername(username);
+
+    delete user._doc.password;
+    res.status(200).json({
+        token,
+        message: 'Signup successfully',
+        user: newUser,
+    });
 }
 
 module.exports = { loginController, signupController };

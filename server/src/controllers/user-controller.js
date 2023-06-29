@@ -46,6 +46,10 @@ async function getFriendsController(req, res) {
 
 // POST /api/friends
 async function addFriendController(req, res) {
+    if (req.user._id == req.body.friend_id) {
+        return res.status(400).json({ message: 'Cannot add yourself' });
+    }
+
     // check if friend is exist
     const friend = getUserByUsername(req.body.friend_id);
 
