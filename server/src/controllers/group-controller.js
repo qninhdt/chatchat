@@ -3,24 +3,24 @@ function getLastestMessagesController(req, res) {
     const { id } = req.params;
 
     // response some fake messgaes with different contents
-    res.staus(200).json([
+    res.status(200).json([
         {
             _id: '0',
             sender_id: '0',
             group_id: '0',
-            content: 'Hello',
+            content: 'Biet ong Thuong khong?',
         },
         {
             _id: '1',
             sender_id: '1',
             group_id: '0',
-            content: 'lo cc',
+            content: 'Thuong nao?',
         },
         {
             _id: '2',
             sender_id: '0',
             group_id: '0',
-            content: '? bro',
+            content: 'Thuong cho tam than co han',
         },
         {
             _id: '3',
