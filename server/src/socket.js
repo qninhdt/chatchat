@@ -139,7 +139,7 @@ function setUpEventHandlers(socket) {
         }
 
         // save message to database
-        createMessage(group_id, socket._id, content);
+        createMessage(socket._id, group_id, content);
 
         await emitEventToGroup(group_id, 'new_message', {
             group_id,

@@ -6,7 +6,7 @@ async function getLastestMessagesController(req, res) {
 
     // TODO: add logic to check if user is a member of the group later
 
-    const messages = await getMessage(id, offset, limit);
+    const messages = await getMessage(id, Number(offset), Number(limit));
 
     res.status(200).json({
         messages,
