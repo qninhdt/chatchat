@@ -45,3 +45,41 @@ h1 {
         margin-bottom: 10px;
     }
 }
+
+.message-area {
+    display: flex;
+    flex-direction: column;
+    
+    .message {
+        margin-bottom: 15px;
+    }
+
+    .host-message {
+        float: right;
+    }
+
+    .guest-message {
+        float: left;
+    }
+    .badge {
+        --bs-badge-font-size: 1.25em;
+        --bs-badge-font-weight: 0;
+    }
+}
+
+#message-input-form {
+    position: fixed; 
+    bottom: 0; 
+    left: 0;
+    right: 0;
+    display: flex; 
+    width: 600px;
+    margin: auto;
+    padding: 0.25rem;
+    input {
+        flex-grow: 1;
+        border-radius: 0.5rem;
+        padding: 0 1rem;
+        margin-right: 0.25rem;
+    }
+}
