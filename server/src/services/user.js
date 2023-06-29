@@ -1,6 +1,6 @@
 const database = require('./database');
 let mongoose = require('mongoose');
-let groups = require('./groupChat');
+let group = require('./group');
 
 let userSchema = mongoose.Schema({
     username: {
@@ -12,15 +12,21 @@ let userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    friendLists: {
+    display_name: {
+        type: String,
+        required: true,
+    },
+    friendList: {
         type: Array,
     },
-    groupLists: {
+    group_ids: {
         type: Array,
     },
 });
 
 let userModel = mongoose.model('User', userSchema);
+
+
 
 // We export many functions, so use format:
 /*
@@ -30,7 +36,6 @@ let userModel = mongoose.model('User', userSchema);
     ...
   };    
 */
-
 module.exports = {
     /**
      *
@@ -54,19 +59,21 @@ module.exports = {
 
     /**
      *
-     * @param {String} userName - username
-     * @param {String} passWord - md5 code of password
+     * @param {String} userName username
+     * @param {String} passWord md5 code of password
+     * @param {String} displayName user's display name
      * @returns True if account is successful created
      */
-    createUser: async function (userName, passWord) {
+    createUser: async function (userName, passWord, displayName) {
         let newUser = new userModel({
             username: userName,
             password: passWord,
+            display_name: displayName
         });
 
         let successCreatedUser = false;
 
-        newUser
+        await newUser
             .save()
             .then((success) => {
                 successCreatedUser = true;
@@ -86,18 +93,18 @@ module.exports = {
      * @returns True if relation is acceptable, False otherwise
      */
     addFriend: async function (idA, idB) {
-        let groupId = await groups.createGroup([idA, idB]);
+        let groupId = await group.createGroup([idA, idB]);
 
         let acceptable = groupId == null ? false : true;
 
-        userModel.findOneAndUpdate(
+        await userModel.findOneAndUpdate(
             {
                 _id: idA,
             },
             {
                 $push: {
-                    friendLists: idB,
-                    groupLists: groupId,
+                    friendList: idB,
+                    group_ids: groupId,
                 },
             },
             function (error, success) {
@@ -108,14 +115,14 @@ module.exports = {
             },
         );
 
-        userModel.findOneAndUpdate(
+        await userModel.findOneAndUpdate(
             {
                 _id: idB,
             },
             {
                 $push: {
-                    friendLists: idA,
-                    groupLists: groupId,
+                    friendList: idA,
+                    group_ids: groupId,
                 },
             },
             function (error, success) {
@@ -129,3 +136,10 @@ module.exports = {
         return acceptable;
     },
 };
+
+/*--- This code is to delete all user ---*/
+// userModel.deleteMany({}).then(() => {
+//     console.log("done");
+// }).catch((err) => {
+//     console.log(err);
+// });

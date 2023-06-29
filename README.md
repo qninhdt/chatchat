@@ -29,7 +29,26 @@ Socket IO:
 
 Database: 
 
-Lưu ý: Các hàm dưới đây đều là hàm bất đồng bộ; nên trong trường hợp cần getMessages hoặc getUser, mọi người vui lòng chờ bằng cách dùng promise hoặc async/await
+<h3>DATABASE<h3>
+User Model:
+- _id
+- username
+- password
+- display_name
+- friendList: Danh sách id của bạn bè
+- group_ids: Danh sách id của group chat
+Group Model:
+- _id
+- members: Danh sách thành viên
+Message Model:
+- _id
+- createdAt
+- updatedAt
+- groupId
+- senderId
+- content
+
+Lưu ý: Các hàm dưới đây đều là hàm bất đồng bộ; nên trong trường hợp cần lấy giá trị trả về, mọi người vui lòng chờ bằng cách dùng promise hoặc async/await
 
 -   user:
     -   async getUserById(id) -> User
@@ -39,3 +58,5 @@ Lưu ý: Các hàm dưới đây đều là hàm bất đồng bộ; nên trong 
 -   messages:
     -   async getMessages(group_id, offset, limit)
     -   async createMessage(sender_id, group_id, content)
+-   group:
+    - async createGroup(listmember) -> Tạo nhóm

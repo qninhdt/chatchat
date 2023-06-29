@@ -1,6 +1,6 @@
 const database = require('./database');
 let mongoose = require('mongoose');
-let users = require('./users');
+let users = require('./user');
 
 let groupSchema = mongoose.Schema({
     members: {
@@ -32,7 +32,7 @@ module.exports = {
 
         let groupId = null;
 
-        newGroup
+        await newGroup
             .save()
             .then((resp) => {
                 groupId = newGroup._id;
