@@ -5,7 +5,7 @@ import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
-const server = '/api/signup';
+const server = 'http://localhost:8000/api/signup';
 
 let loginForm = document.getElementById('login-form');
 
@@ -65,17 +65,28 @@ const infoFirstCheck = function (username, password, password2) {
 const getServerResponse = async function (username, password, password2) {
     if (!infoFirstCheck(username, password, password2)) return 0;
 
-    // let token = jwt.sign({ username: username }, password);
-    let token = "me may beo"
     let response = await fetch(server, {
         method: 'POST',
-        body: {
-            username: username,
-            password: password
+        headers: {
+            'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
     });
-    // localStorage.setItem("jwtToken", token)
+    // localStorage.setItem('jwtToken', token);
+    let json = await response.json();
+    let status = response.status;
+    if (status == 404) {
+        alert('This username has already been taken.');
+        return 0;
+    }
 
+    let jwtToken = await json.token;
+    localStorage.setItem('jwtToken', jwtToken);
+
+    // localStorage.setItem("jwtToken", token)
 
     return 1;
 };
@@ -99,15 +110,18 @@ loginForm.addEventListener('submit', async function (e) {
     let username = usernameInput.value;
     let password = passwordInput.value;
 
-    let isValid = await getServerResponse(username, password, passwordRetype.value);
+    let isValid = await getServerResponse(
+        username,
+        password,
+        passwordRetype.value,
+    );
     if (isValid) {
         alert('Successfully registered.');
         location.href = 'friendlist.html';
         localStorage.setItem('username', username);
     }
-    
-    localStorage.setItem("curUser", username)
-    
+
+    localStorage.setItem('curUser', username);
 });
 
 checkInvalid();

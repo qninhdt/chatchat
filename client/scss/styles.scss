@@ -21,13 +21,14 @@ h1 {
 .login-status {
     margin-top: 10px;
     text-align: right;
+    font-size: small;
+    color: gray;
     li {
         display: inline;
     }
-    #current-user {
-        font-size: small;
-        color: gray;
-    }
+    // #current-user {
+        
+    // }
     button {
         --bs-btn-padding-y: .25rem; 
         --bs-btn-padding-x: .5rem; 
