@@ -10,7 +10,14 @@ const groupMap = new Map();
 let io = null;
 
 function createSocketServer(server) {
-    io = socketIO(server);
+    io = socketIO(server, {
+        cors: {
+            origin: '*',
+            methods: ['GET', 'POST'],
+            allowedHeaders: ['Content-Type'],
+            credentials: true,
+        },
+    });
 
     io.on('connection', (socket) => {
         const auth = socket.handshake.headers.authorization;
