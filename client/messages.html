@@ -1,0 +1,57 @@
+<!-- friendlist.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chatchat - Messages</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="wrap">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a href="friendlist.html" class="navbar-brand">chatchat</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a href="friendlist.html" aria-current="page" class="nav-link active">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Find Friends</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">About</a>
+                        </li>
+                    </ul>
+                    <ul class="login-status">
+                        <li id="current-user">
+                            Logged in as ${username}
+                        </li>
+                        <li id="log-out-btn">
+                            <button class="btn btn-outline-secondary btn-sm" type="button">Log Out</button>
+                        </li>
+                    </ul>
+            </div>
+        </nav>
+        <div class="message-area">
+            <div class=""><span class="badge rounded-pill text-bg-primary message host-message">Hey</span></div>
+            <div class=""><span class="badge rounded-pill text-bg-primary message host-message">Hey</span></div>
+            <div class=""><span class="badge rounded-pill text-bg-secondary message guest-message">Sup</span></div>
+            <div class=""><span class="badge rounded-pill text-bg-primary message host-message">Do you know ligma?</span></div>
+            <div class=""><span class="badge rounded-pill text-bg-secondary message guest-message">Ligma what?</span></div>
+            <div class=""><span class="badge rounded-pill text-bg-primary message host-message">Ligma balls 🤣👉</span></div>
+            </ul>
+            <form action="" id="message-input-form">
+                <input type="text" id="message-input" class="form-controller" autocomplete="off" placeholder="Type something...">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+    <script type="module" src="./js/messages.js"></script>
+</body>
+</html>
