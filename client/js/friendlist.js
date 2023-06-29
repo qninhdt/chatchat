@@ -31,12 +31,6 @@ logOutButton.addEventListener('click', () => {
     location.href = 'index.html';
 });
 
-//Go to the messages page
-const goToChat = function (chatGroup) {
-    localStorage.setItem('chatGroup', chatGroup);
-    location.href('messages.html');
-};
-
 //Set up the data for the current user
 //Returns the current user's info as an object
 const setupCurrentUser = async function () {
