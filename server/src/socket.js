@@ -1,6 +1,9 @@
 const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
 
+const { getUserById } = require('./services/user');
+const { createMessage } = require('./services/message');
+
 const socketMap = new Map();
 const groupMap = new Map();
 
@@ -19,7 +22,7 @@ function createSocketServer(server) {
 
         const token = auth.split(' ')[1];
 
-        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
             if (err) {
                 console.log('A client has connected with an invalid token');
                 return socket.disconnect();
@@ -28,13 +31,13 @@ function createSocketServer(server) {
             socket._id = decoded._id;
             socket.username = decoded.username;
 
-            onConnected(socket);
+            await onConnected(socket);
             setUpEventHandlers(socket);
         });
     });
 }
 
-function emitEventToGroup(group_id, event, data) {
+async function emitEventToGroup(group_id, event, data) {
     const users = groupMap.get(group_id);
 
     for (const user_id of users) {
@@ -45,10 +48,8 @@ function emitEventToGroup(group_id, event, data) {
     }
 }
 
-function emitEventToFriends(user_id, event, data) {
-    const friend_ids = require('./controllers/user-controller').fakeUsers.find(
-        (user) => user._id === user_id,
-    ).friend_ids;
+async function emitEventToFriends(user_id, event, data) {
+    const { friend_ids } = await getUserById(user_id);
 
     for (const friend_id of friend_ids) {
         if (socketMap.has(friend_id)) {
@@ -61,11 +62,8 @@ function emitEventToFriends(user_id, event, data) {
 }
 
 // handle event when a client connects
-function onConnected(socket) {
-    // fix this line when @danquan implements the getUserById function
-    const groups = require('./controllers/user-controller').fakeUsers.find(
-        (user) => user._id === socket._id,
-    ).group_ids;
+async function onConnected(socket) {
+    const groups = (await getUserById(socket._id)).group_ids;
 
     // add socket to socketMap
     if (!socketMap.has(socket._id)) {
@@ -75,19 +73,23 @@ function onConnected(socket) {
     socketMap.get(socket._id).push(socket);
 
     // add user to groupMap if not already in it
-    groups.forEach((group_id) => {
+    groups.forEach((_group_id) => {
+        const group_id = _group_id.toString();
+
         if (!groupMap.has(group_id)) {
             groupMap.set(group_id, []);
         }
         groupMap.get(group_id).push(socket._id);
     });
 
-    emitEventToFriends(socket._id, 'online', {
+    await emitEventToFriends(socket._id, 'online', {
         user_id: socket._id,
     });
+
+    console.log(`${socket.username} has connected`);
 }
 
-function onDisconnected(socket) {
+async function onDisconnected(socket) {
     // remove socket from socketMap
     const sockets = socketMap.get(socket._id);
     const index = sockets.indexOf(socket);
@@ -98,21 +100,21 @@ function onDisconnected(socket) {
     }
 
     // remove user from groupMap
-    const groups = require('./controllers/user-controller').fakeUsers.find(
-        (user) => user._id === socket._id,
-    ).group_ids;
+    const groups = (await getUserById(socket._id)).group_ids;
 
-    groups.forEach((group) => {
-        const users = groupMap.get(group._id);
+    groups.forEach((_group_id) => {
+        const group_id = _group_id.toString();
+
+        const users = groupMap.get(group_id);
         const index = users.indexOf(socket._id);
         users.splice(index, 1);
 
         if (users.length === 0) {
-            groupMap.delete(group._id);
+            groupMap.delete(group_id);
         }
     });
 
-    emitEventToFriends(socket._id, 'offline', {
+    await emitEventToFriends(socket._id, 'offline', {
         user_id: socket._id,
     });
 
@@ -120,7 +122,15 @@ function onDisconnected(socket) {
 }
 
 function setUpEventHandlers(socket) {
-    socket.on('new_message', ({ group_id, content }) => {
+    socket.on('new_message', async ({ group_id, content }) => {
+        if (!groupMap.has(group_id)) {
+            return;
+        }
+
+        if (!content) {
+            return;
+        }
+
         const users = groupMap.get(group_id);
 
         // check if user is in group
@@ -128,17 +138,18 @@ function setUpEventHandlers(socket) {
             return;
         }
 
-        // save message to database when @danquan implements the addMessage function
+        // save message to database
+        createMessage(group_id, socket._id, content);
 
-        emitEventToGroup(group_id, 'new_message', {
+        await emitEventToGroup(group_id, 'new_message', {
             group_id,
             content,
             sender_id: socket._id,
         });
     });
 
-    socket.on('disconnect', () => {
-        onDisconnected(socket);
+    socket.on('disconnect', async () => {
+        await onDisconnected(socket);
     });
 }
 

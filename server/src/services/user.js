@@ -16,7 +16,7 @@ let userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    friendList: {
+    friend_ids: {
         type: Array,
     },
     group_ids: {
@@ -25,8 +25,6 @@ let userSchema = mongoose.Schema({
 });
 
 let userModel = mongoose.model('User', userSchema);
-
-
 
 // We export many functions, so use format:
 /*
@@ -68,7 +66,7 @@ module.exports = {
         let newUser = new userModel({
             username: userName,
             password: passWord,
-            display_name: displayName
+            display_name: displayName,
         });
 
         let successCreatedUser = false;
@@ -103,16 +101,17 @@ module.exports = {
             },
             {
                 $push: {
-                    friendList: idB,
+                    friend_ids: idB,
                     group_ids: groupId,
                 },
             },
-            function (error, success) {
-                if (error) {
-                    acceptable = false;
-                    console.log(error);
-                }
-            },
+            // Error: "Model.findOneAndUpdate() no longer accepts a callback"
+            // function (error, success) {
+            //     if (error) {
+            //         acceptable = false;
+            //         console.log(error);
+            //     }
+            // },
         );
 
         await userModel.findOneAndUpdate(
@@ -121,16 +120,16 @@ module.exports = {
             },
             {
                 $push: {
-                    friendList: idA,
+                    friend_ids: idA,
                     group_ids: groupId,
                 },
             },
-            function (error, success) {
-                if (error) {
-                    acceptable = false;
-                    console.log(error);
-                }
-            },
+            // function (error, success) {
+            //     if (error) {
+            //         acceptable = false;
+            //         console.log(error);
+            //     }
+            // },
         );
 
         return acceptable;

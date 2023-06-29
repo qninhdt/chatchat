@@ -2,23 +2,24 @@ const database = require('./database');
 let mongoose = require('mongoose');
 let group = require('./group');
 
-let messageSchema = mongoose.Schema({
-    groupId: {
-        type: mongoose.ObjectId,
-        required: true,
+let messageSchema = mongoose.Schema(
+    {
+        groupId: {
+            type: mongoose.ObjectId,
+            required: true,
+        },
+        senderId: {
+            type: mongoose.ObjectId,
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
     },
-    senderId: {
-        type: mongoose.ObjectId,
-        required: true,
+    {
+        timestamps: true,
     },
-    content: {
-        type: String,
-        required: true,
-    },
-}, 
-{
-    timestamps: true
-}
 );
 
 let messageModel = mongoose.model('Message', messageSchema);
@@ -43,7 +44,7 @@ module.exports = {
         let newMessage = new messageModel({
             groupId: _groupId,
             senderId: _senderId,
-            conntent: _content,
+            content: _content,
         });
 
         let isSent = false;
@@ -62,18 +63,21 @@ module.exports = {
     },
 
     /**
-     * 
+     *
      * @param {ObjectId} _groupId _id of group that we are quering
      * @param {Number} _offset the number of skipped messages
      * @param {Number} _limit the number of messages need
-     * @returns List of message model 
+     * @returns List of message model
      */
-    getMessage: async function(_groupId, _offset, _limit) {
-        return await messageModel.find({
-            groupId : _groupId
-        }).skip(_offset).limit(_limit).sort({
-            createdAt: 'desc'
-        });
-    }
+    getMessage: async function (_groupId, _offset, _limit) {
+        return await messageModel
+            .find({
+                groupId: _groupId,
+            })
+            .skip(_offset)
+            .limit(_limit)
+            .sort({
+                createdAt: 'desc',
+            });
+    },
 };
-

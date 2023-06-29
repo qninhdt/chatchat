@@ -1,31 +1,9 @@
 const { socketMap } = require('../socket');
-
-const fakeUsers = [
-    {
-        _id: '0',
-        username: 'qninh',
-        password: '123456', // Just for testing, don't do this in production
-        display_name: 'Quang Ninh',
-        friend_ids: ['1', '2'],
-        group_ids: ['0', '1'],
-    },
-    {
-        _id: '1',
-        username: 'bardabez',
-        password: '123456',
-        display_name: 'Bardabez',
-        friend_ids: ['0'],
-        group_ids: ['0'],
-    },
-    {
-        _id: '2',
-        username: 'lmao',
-        password: '123456',
-        display_name: 'Lmao',
-        friend_ids: ['0'],
-        group_ids: ['1'],
-    },
-];
+const {
+    addFriend,
+    getUserById,
+    getUserByUsername,
+} = require('../services/user');
 
 // GET /api/users
 function getUsersController(req, res) {
@@ -34,17 +12,27 @@ function getUsersController(req, res) {
 
 // GET /api/users/:id
 function getUserController(req, res) {
-    const user = fakeUsers.find((user) => user._id === req.params.id);
+    const user = getUserById(req.params.id);
 
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json();
+    res.status(200).json(user);
 }
 
 // POST /api/friends
-function addFriendController(req, res) {
+async function addFriendController(req, res) {
+    // check if friend is exist
+    const friend = getUserByUsername(req.body.friend_id);
+
+    if (!friend) {
+        return res.status(404).json({ message: 'Friend not found' });
+    }
+
+    // update in database
+    await addFriend(req.user._id, req.body.friend_id);
+
     // emit event to 2 users
     const users = [req.user._id, req.body.friend_id];
 
@@ -64,7 +52,6 @@ function addFriendController(req, res) {
 }
 
 module.exports = {
-    fakeUsers,
     getUsersController,
     getUserController,
     addFriendController,
