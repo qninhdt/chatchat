@@ -27,7 +27,7 @@ currentUser.innerHTML = `Logged in as <strong>${localStorage.getItem(
 //Log out
 let logOutButton = document.getElementById('log-out-btn');
 logOutButton.addEventListener('click', () => {
-    localStorage.removeItem('username');
+    localStorage.clear();
     location.href = 'index.html';
 });
 
@@ -69,6 +69,7 @@ const displayFriendList = async function () {
         let newLi = document.createElement('li');
         newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary" onclick="{
             localStorage.setItem('chatGroup', ${curFriendInfo.chatGroup});
+            localStorage.setItem('chatGuest', '${curFriendInfo.username}');
             location.href = 'messages.html';
         };">${curFriendInfo.username}</button></div>`;
         documentFriendList.appendChild(newLi);
