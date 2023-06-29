@@ -31,6 +31,12 @@ logOutButton.addEventListener('click', () => {
     location.href = 'index.html';
 });
 
+//Go to the messages page
+const goToChat = function (chatGroup) {
+    localStorage.setItem('chatGroup', chatGroup);
+    location.href('messages.html');
+};
+
 //Set up the data for the current user
 //Returns the current user's info as an object
 const setupCurrentUser = async function () {
@@ -39,24 +45,32 @@ const setupCurrentUser = async function () {
     for (let element of json)
         if (element.username == localStorage.getItem('username'))
             curUserInfo = element;
-    curUserInfo.friends = curUserInfo.friend_ids.map((curFriendId) => {
+    curUserInfo.friends = [];
+    for (let i = 0; i < curUserInfo.friend_ids.length; i++) {
+        let curFriendInfo = {};
         for (let element of json)
-            if (element._id == curFriendId) return element.username;
-    });
+            if (element._id == curUserInfo.friend_ids[i]) {
+                curFriendInfo.username = element.username;
+                curFriendInfo.chatGroup = curUserInfo.group_ids[i];
+                curUserInfo.friends.push(curFriendInfo);
+            }
+    }
+    // console.log(curUserInfo);
     localStorage.setItem('curUserInfo', JSON.stringify(curUserInfo));
     return curUserInfo;
-    console.log(curUserInfo);
 };
-
 setupCurrentUser();
 
 //Display the friend list of the user as buttons
 const displayFriendList = async function () {
     let documentFriendList = document.getElementsByClassName('friend-list')[0];
     let curUserInfo = await setupCurrentUser();
-    for (let friend of curUserInfo.friends) {
+    for (let curFriendInfo of curUserInfo.friends) {
         let newLi = document.createElement('li');
-        newLi.innerHTML = `<div class="d-grid"><button class="btn btn-outline-primary" onclick="">${friend}</button></div>`;
+        newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary" onclick="{
+            localStorage.setItem('chatGroup', ${curFriendInfo.chatGroup});
+            location.href = 'messages.html';
+        };">${curFriendInfo.username}</button></div>`;
         documentFriendList.appendChild(newLi);
     }
 };
