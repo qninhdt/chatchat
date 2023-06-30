@@ -60,7 +60,7 @@ const setupFriends = async function () {
         },
     );
     let json = await response.json();
-    // console.log(`[friendlist.js] json = ${json.friends}`);
+
     for (let i = 0; i < getCurUserInfo().friend_ids.length; i++) {
         for (let curFriend of json.friends)
             if (curFriend._id == getCurUserInfo().friend_ids[i])
@@ -68,8 +68,6 @@ const setupFriends = async function () {
     }
     localStorage.setItem('friendsInfo', JSON.stringify(json.friends));
 
-    // console.log(`[friendlist.js] json.friends = ${json.friends}`);
-    // console.log(json.friends)
     return json.friends;
 };
 setupFriends();
@@ -80,7 +78,6 @@ const displayFriendList = async function () {
     let friendsInfo = await setupFriends();
     for (let curFriendInfo of friendsInfo) {
         let newLi = document.createElement('li');
-        console.log(JSON.stringify(curFriendInfo));
         newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary" onclick="{
             localStorage.setItem('chatGroup', '${curFriendInfo.group_id}');
             localStorage.setItem('chatGuest', '${curFriendInfo.display_name}');

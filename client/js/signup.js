@@ -119,14 +119,6 @@ loginForm.addEventListener('submit', async function (e) {
     let passwordRetype = document.getElementById('password-retype');
     let displayNameInput = document.getElementById('display-name-input');
 
-    if (!(usernameInput.value == '' || passwordInput.value == '')) {
-        console.log(`[signup.js] usernameInput.value = ${usernameInput.value}`);
-        console.log(`[signup.js] passwordInput.value = ${passwordInput.value}`);
-        console.log(
-            `[signup.js] passwordRetype.value = ${passwordRetype.value}`,
-        );
-    }
-
     let username = usernameInput.value;
     let password = passwordInput.value;
     let displayName = displayNameInput.value;

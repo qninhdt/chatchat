@@ -65,10 +65,8 @@ const getServerResponse = async function (username, password) {
     localStorage.setItem('jwtToken', jwtToken);
 
     if (json.message == 'Login successfully') {
-        // console.log(json);
         alert('Successfully logged in.');
         localStorage.setItem('userInfo', JSON.stringify(json.user));
-        console.log(`[login.js] json = ${json}`);
         return 1;
     }
 
@@ -82,12 +80,7 @@ loginForm.addEventListener('submit', async function (e) {
 
     let usernameInput = document.getElementById('username-input');
     let passwordInput = document.getElementById('password-input');
-
-    if (!(usernameInput.value == '' || passwordInput.value == '')) {
-        console.log(`[login.js] usernameInput.value = ${usernameInput.value}`);
-        console.log(`[login.js] passwordInput.value = ${passwordInput.value}`);
-    }
-
+    
     let username = usernameInput.value;
     let password = passwordInput.value;
 

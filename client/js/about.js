@@ -17,5 +17,3 @@ if (getCurUserInfo() == null) {
         getCurUserInfo().display_name
     }</strong> `;
 }
-
-console.log(getCurUserInfo().display_name)

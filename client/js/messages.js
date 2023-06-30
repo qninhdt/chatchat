@@ -4,6 +4,8 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 import '../scss/styles.scss';
 
 const MESSAGE_DISPLAY_LIMIT = 20;
+const MESSAGE_LENGTH_LIMIT = 999;
+const MESSAGE_LINE_LIMIT = 50;
 
 if (localStorage.getItem('chatGroup') == null)
     location.href = 'friendlist.html';
@@ -37,7 +39,6 @@ let chatGuest = localStorage.getItem('chatGuest');
 let newH1 = document.createElement('h1');
 newH1.textContent = chatGuest;
 document.getElementById('chat-guest').appendChild(newH1);
-console.log(chatGuest);
 
 //Display the newest message
 const addMessageToDisplay = function (message) {
@@ -46,7 +47,7 @@ const addMessageToDisplay = function (message) {
     if (message.type == 'system-message') {
         newDiv.innerHTML = `<span id="system-message">${message.content}</span>`;
     } else {
-        newDiv.innerHTML = `<span class="badge rounded-pill text-bg-${message.displayType} message ${message.type}">${message.content}</span>`;
+        newDiv.innerHTML = `<span class="badge text-bg-${message.displayType} message ${message.type}">${message.content}</span>`;
     }
     messageArea.appendChild(newDiv);
 };
@@ -66,7 +67,6 @@ const getMessages = async function (offset, limit) {
         },
     );
     let json = await response.json();
-    console.log(json);
     return json.messages;
 };
 
@@ -92,19 +92,15 @@ const getOldMessages = async function (offsetLevel) {
                 curMsg.type = 'guest-message';
                 curMsg.displayType = 'secondary';
             }
-            // console.log(element.sender_id);
-            // console.log(JSON.parse(localStorage.getItem('userInfo'))._id)
             oldMessages.push(curMsg);
         }
     });
     oldMessages.reverse();
-    console.log(oldMessages);
     return oldMessages;
 };
 
 //Display old messages
 const displayOldMessages = async function (offsetLevel) {
-    console.log(offsetLevel);
 
     let messageArea = document.getElementById('message-display-area');
     messageArea.innerHTML = '';
@@ -127,7 +123,6 @@ const displayOldMessages = async function (offsetLevel) {
 
     oldMessages.forEach((message) => {
         addMessageToDisplay(message);
-        console.log(message);
     });
 
     if (oldMessages.length == 0)
@@ -161,17 +156,50 @@ let socket = io('localhost:8000', {
 let messageInputForm = document.getElementById('message-input-form');
 var messageInput = document.getElementById('message-input');
 
-console.log(localStorage.getItem('chatGroup'));
+
+const addLineBreak = function (text) {
+    text += ' ';
+    let ret = '';
+    let line = '';
+    let word = '';
+    for (let character of text) {
+        word += character;
+        if (character != ' ') {
+            if (word.length >= MESSAGE_DISPLAY_LIMIT) {
+                if ((line + word).length > MESSAGE_LINE_LIMIT) {
+                    line += '<br>';
+                    ret += line;
+                    line = word;
+                } else line += word;
+                word = '';
+            }
+        } else {
+            if ((line + word).length > MESSAGE_LINE_LIMIT) {
+                line += '<br>';
+                ret += line;
+                line = word;
+            } else line += word;
+            word = '';
+        }
+    }
+    ret += line;
+    return ret;
+};
 
 messageInputForm.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (messageInput.value.length > MESSAGE_LENGTH_LIMIT) {
+        alert('Your message is too long.\n');
+        return;
+    }
+    let messageContent = addLineBreak(messageInput.value);
     if (messageInput.value) {
         socket.emit('new_message', {
-            content: messageInput.value,
+            content: messageContent,
             groupId: localStorage.getItem('chatGroup'),
         });
         let message = {
-            content: messageInput.value,
+            content: messageContent,
             type: 'host-message',
             displayType: 'primary',
         };
