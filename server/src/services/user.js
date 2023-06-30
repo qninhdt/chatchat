@@ -35,6 +35,14 @@ let userModel = mongoose.model('User', userSchema);
   };    
 */
 module.exports = {
+    getAllUsers: async function () {
+        return (await userModel.find()).map((user) => {
+            delete user._doc.password;
+            delete user._doc.group_ids;
+            delete user._doc.friend_ids;
+            return user;
+        });
+    },
     /**
      *
      * @param {String} userName

@@ -3,12 +3,13 @@ const {
     addFriend,
     getUserById,
     getUserByUsername,
+    getAllUsers,
 } = require('../services/user');
 
 // GET /api/users
-function getUsersController(req, res) {
+async function getUsersController(req, res) {
     res.status(200).json({
-        message: 'nope',
+        users: await getAllUsers(),
     });
 }
 

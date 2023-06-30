@@ -20,6 +20,21 @@ let groupModel = mongoose.model('Groups', groupSchema);
 */
 
 module.exports = {
+    getGroup: async function (id) {
+        let group = null;
+
+        await groupModel
+            .findById(id)
+            .then((resp) => {
+                group = resp;
+            })
+            .catch((err) => {
+                group = null;
+                console.log(err);
+            });
+
+        return group;
+    },
     /**
      *
      * @param {list} list_members list of member in new group
