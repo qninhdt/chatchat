@@ -1,4 +1,5 @@
 import * as bootstrap from 'bootstrap';
+import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 import '../scss/styles.scss';
 
@@ -72,18 +73,50 @@ const setupFriends = async function () {
 };
 setupFriends();
 
+const getNewestMessageTime = async function () {
+    let offset = 0;
+    let limit = 1;
+    let response = await fetch(
+        `http://localhost:8000/api/groups/${localStorage.getItem(
+            'chatGroup',
+        )}/messages?offset=${offset}&limit=${limit}`,
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                'Content-Type': 'application/json',
+            },
+        },
+    );
+    let json = await response.json();
+    let createdAt = new Date(json.messages[0].createdAt);
+    return createdAt.getTime();
+};
+
 //Display the friendlist of the user as buttons
 const displayFriendList = async function () {
     let documentFriendList = document.getElementsByClassName('friend-list')[0];
     let friendsInfo = await setupFriends();
+    let buttonId = 0;
     for (let curFriendInfo of friendsInfo) {
+        let newestMessageTime = await getNewestMessageTime();
+        let lastMessageTime = localStorage.getItem(`lastMessageTime_${curFriendInfo.group_id}`);
+        buttonId ++;
+
         let newLi = document.createElement('li');
-        newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary" onclick="{
+        newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary position-relative" id="btn-${buttonId}" onclick="{
             localStorage.setItem('chatGroup', '${curFriendInfo.group_id}');
             localStorage.setItem('chatGuest', '${curFriendInfo.display_name}');
             location.href = 'messages.html';
         };">${curFriendInfo.display_name}</button></div>`;
         documentFriendList.appendChild(newLi);
+        if (newestMessageTime != lastMessageTime) {
+            console.log(newestMessageTime);
+            console.log(lastMessageTime)
+            let button = document.getElementById(`btn-${buttonId}`);
+            button.innerHTML = `${curFriendInfo.display_name}<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+            <span class="visually-hidden">New alerts</span>`
+        }
     }
 };
 displayFriendList();

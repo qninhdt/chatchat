@@ -11,6 +11,8 @@ if (localStorage.getItem('chatGroup') == null)
     location.href = 'friendlist.html';
 if (localStorage.getItem('username') == null) location.href = 'index.html';
 
+localStorage.setItem(`newMessage_${lcalStorage.getItem('chatGroup')}`, 0)o
+
 //Get current user's info as JSON
 const getCurUserInfo = function () {
     return JSON.parse(localStorage.getItem('userInfo'));
@@ -184,6 +186,7 @@ const addLineBreak = function (text) {
     return ret;
 };
 
+//Send a message
 messageInputForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (messageInput.value.length > MESSAGE_LENGTH_LIMIT) {
@@ -206,15 +209,18 @@ messageInputForm.addEventListener('submit', function (e) {
     }
 });
 
+//Check for new messages
 socket.on('new_message', ({ group_id, sender_id, content }) => {
     let message = { content };
-
-    if (group_id != localStorage.getItem('chatGroup')) return;
 
     [message.type, message.displayType] =
         sender_id == JSON.parse(localStorage.getItem('userInfo'))._id
             ? ['host-message', 'primary']
             : ['guest-message', 'secondary'];
+
+    let now = new Date();
+    localStorage.setItem(`lastMessage_${group_id}`, now.getTime());
+    // console.log(localStorage.getItem(`lastMessageTime_${group_id}`));
 
     addMessageToDisplay(message);
 });
