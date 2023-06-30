@@ -101,7 +101,6 @@ const getOldMessages = async function (offsetLevel) {
 
 //Display old messages
 const displayOldMessages = async function (offsetLevel) {
-
     let messageArea = document.getElementById('message-display-area');
     messageArea.innerHTML = '';
 
@@ -156,7 +155,6 @@ let socket = io('localhost:8000', {
 let messageInputForm = document.getElementById('message-input-form');
 var messageInput = document.getElementById('message-input');
 
-
 const addLineBreak = function (text) {
     text += ' ';
     let ret = '';
@@ -204,14 +202,19 @@ messageInputForm.addEventListener('submit', function (e) {
             displayType: 'primary',
         };
         messageInput.value = '';
-        addMessageToDisplay(message);
+        // addMessageToDisplay(message);
     }
 });
 
-socket.on('new_message', (response) => {
-    let message = { content: response.content };
-    //  message.type = 'host-message';
-    if (sender_id != getCurUserInfo().sender_id) message.type = 'guest-message';
-    message.displayType = 'secondary';
+socket.on('new_message', ({ group_id, sender_id, content }) => {
+    let message = { content };
+
+    if (group_id != localStorage.getItem('chatGroup')) return;
+
+    [message.type, message.displayType] =
+        sender_id == JSON.parse(localStorage.getItem('userInfo'))._id
+            ? ['host-message', 'primary']
+            : ['guest-message', 'secondary'];
+
     addMessageToDisplay(message);
 });
