@@ -210,8 +210,8 @@ messageInputForm.addEventListener('submit', function (e) {
 
 socket.on('new_message', (response) => {
     let message = { content: response.content };
-    // if (sender_id == getCurUserInfo().sender_id) message.type = 'host-message';
-    message.type = 'guest-message';
+    //  message.type = 'host-message';
+    if (sender_id != getCurUserInfo().sender_id) message.type = 'guest-message';
     message.displayType = 'secondary';
     addMessageToDisplay(message);
 });
