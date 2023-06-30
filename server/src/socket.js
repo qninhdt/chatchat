@@ -71,37 +71,34 @@ async function onConnected(socket) {
 
     // add socket to socketMap
     if (!socketMap.has(socket._id)) {
-        socketMap.set(socket._id, []);
+        socketMap.set(socket._id, new Set());
     }
 
-    socketMap.get(socket._id).push(socket);
+    socketMap.get(socket._id).add(socket);
 
     // add user to groupMap if not already in it
     groups.forEach((_group_id) => {
         const group_id = _group_id.toString();
 
         if (!groupMap.has(group_id)) {
-            groupMap.set(group_id, []);
+            groupMap.set(group_id, new Set());
         }
-        groupMap.get(group_id).push(socket._id);
+        groupMap.get(group_id).add(socket._id);
     });
 
-    await emitEventToFriends(socket._id, 'online', {
-        user_id: socket._id,
-    });
+    if (socketMap.get(socket._id).size === 1) {
+        await emitEventToFriends(socket._id, 'online', {
+            user_id: socket._id,
+        });
 
-    console.log(`${socket.username} has connected`);
+        console.log(`${socket.username} has connected`);
+    }
 }
 
 async function onDisconnected(socket) {
     // remove socket from socketMap
     const sockets = socketMap.get(socket._id);
-    const index = sockets.indexOf(socket);
-    sockets.splice(index, 1);
-
-    if (sockets.length === 0) {
-        socketMap.delete(socket._id);
-    }
+    sockets.delete(socket._id);
 
     // remove user from groupMap
     const groups = (await getUserById(socket._id)).group_ids;
@@ -110,19 +107,21 @@ async function onDisconnected(socket) {
         const group_id = _group_id.toString();
 
         const users = groupMap.get(group_id);
-        const index = users.indexOf(socket._id);
-        users.splice(index, 1);
+        users.delete(socket._id);
 
         if (users.length === 0) {
             groupMap.delete(group_id);
         }
     });
 
-    await emitEventToFriends(socket._id, 'offline', {
-        user_id: socket._id,
-    });
+    if (socketMap.get(socket._id).size == 0) {
+        await emitEventToFriends(socket._id, 'offline', {
+            user_id: socket._id,
+        });
+        socketMap.delete(socket._id);
 
-    console.log(`${socket.username} has disconnected`);
+        console.log(`${socket.username} has disconnected`);
+    }
 }
 
 function setUpEventHandlers(socket) {
@@ -138,7 +137,7 @@ function setUpEventHandlers(socket) {
         const users = groupMap.get(group_id);
 
         // check if user is in group
-        if (!users.includes(socket._id)) {
+        if (!users.has(socket._id)) {
             return;
         }
 
