@@ -13,9 +13,6 @@ function createSocketServer(server) {
     io = socketIO(server, {
         cors: {
             origin: '*',
-            methods: ['GET', 'POST'],
-            allowedHeaders: ['Content-Type'],
-            credentials: true,
         },
     });
 
@@ -129,7 +126,7 @@ async function onDisconnected(socket) {
 }
 
 function setUpEventHandlers(socket) {
-    socket.on('new_message', async ({ group_id, content }) => {
+    socket.on('new_message', async ({ groupId: group_id, content }) => {
         if (!groupMap.has(group_id)) {
             return;
         }
