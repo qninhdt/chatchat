@@ -36,13 +36,15 @@ h1 {
     }
 }
 
-.friend-list {
+.friend-list, #find-user-result {
+    padding-left: 0;
     li {
         button{
             text-align: left;
         }
         list-style-type: none;
         margin-bottom: 10px;
+        
     }
 }
 
@@ -88,14 +90,15 @@ h1 {
     }
 }
 
-#message-input-form {
+#message-input-form, #find-user-input-form {
     // position: fixed; 
     // bottom: 0; 
     // left: 0;
     // right: 0;
     display: flex; 
     width: 600px;
-    margin: auto;
+    // margin: auto;
+    margin-bottom: 10px;
     padding: 0.25rem;
     background: rgba(0, 0, 0, 0.15);
     input {

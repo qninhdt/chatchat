@@ -82,7 +82,7 @@ const displayFriendList = async function () {
             localStorage.setItem('chatGroup', '${curFriendInfo.group_id}');
             localStorage.setItem('chatGuest', '${curFriendInfo.display_name}');
             location.href = 'messages.html';
-        };">${curFriendInfo.display_name}</button></div>`;
+        };">${curFriendInfo.display_name} (@${curFriendInfo.username})</button></div>`;
         documentFriendList.appendChild(newLi);
     }
 };

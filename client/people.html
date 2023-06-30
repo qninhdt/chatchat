@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>chatchat - Home</title>
+    <title>chatchat - People</title>
     <meta charset="utf-8">
 </head>
 <body>
@@ -16,10 +16,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a href="friendlist.html" aria-current="page" class="nav-link active">Home</a>
+                            <a href="friendlist.html"  class="nav-link">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a href="people.html" class="nav-link">People</a>
+                            <a href="people.html" aria-current="page" class="nav-link active">People</a>
                         </li>
                         <li class="nav-item">
                             <a href="about.html" class="nav-link">About</a>
@@ -39,15 +39,18 @@
             </div>
         </nav>
         
-        <h1 id="friendlist-header-text">Friendlist</h1>
-        <ul class="friend-list">
-            <!-- <li><div class="d-grid"><button class="btn btn-outline-primary" onclick="">dat2</button></div></li>
-            <li><div class="d-grid"><button class="btn btn-outline-primary" onclick="">dat3</button></div></li>
-            <li><div class="d-grid"><button class="btn btn-outline-primary" onclick="">dat4</button></div></li> -->
-        </ul>
-        <p>Choose someone to start your conversation or
-            <a href="people.html"> find some new friends</a>.</p>
+        <h1>People</h1>
+        <div class="find-users">
+            <form action="" id="find-user-input-form">
+                <input type="text" id="find-user-input" class="form-controller" autocomplete="off" placeholder="Search for People">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <ul id="find-user-result">
+                <!-- <li><div class="d-grid"><button type="button" class="btn btn-outline-primary">ambatukam</button></div></li> -->
+            </ul>
+        </div>
+
     </div>
-    <script type="module" src="./js/friendlist.js"></script>
+    <script type="module" src="./js/people.js"></script>
 </body>
 </html>
