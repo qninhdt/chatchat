@@ -9,6 +9,23 @@ const server = 'http://localhost:8000/api/signup';
 
 let loginForm = document.getElementById('login-form');
 
+//Get current user's info as JSON
+const getCurUserInfo = function () {
+    return JSON.parse(localStorage.getItem('userInfo'));
+};
+if (getCurUserInfo() != null) location.href ='friendlist.html';
+
+//Who logged in?
+let loginStatus = document.getElementsByClassName('login-status')[0];
+if (getCurUserInfo() == null) {
+    loginStatus.innerHTML = 'Please log in or sign up to get started.';
+} else {
+    let currentUser = document.getElementById('current-user');
+    currentUser.innerHTML = `Logged in as <strong>${
+        getCurUserInfo().display_name
+    }</strong> `;
+}
+
 //Check if an input box in the form is currently non-empty
 const checkInvalid = function () {
     const forms = document.querySelectorAll('.needs-validation');
@@ -60,8 +77,13 @@ const infoFirstCheck = function (username, password, password2) {
     return 1;
 };
 
-//Post {username, password, display_name} to the server (after some validation) 
-const getServerResponse = async function (username, password, password2, displayName) {
+//Post {username, password, display_name} to the server (after some validation)
+const getServerResponse = async function (
+    username,
+    password,
+    password2,
+    displayName,
+) {
     if (!infoFirstCheck(username, password, password2)) return 0;
 
     let response = await fetch(server, {
@@ -72,7 +94,7 @@ const getServerResponse = async function (username, password, password2, display
         body: JSON.stringify({
             username: username,
             password: password,
-            display_name: displayName
+            display_name: displayName,
         }),
     });
     let json = await response.json();
@@ -95,7 +117,7 @@ loginForm.addEventListener('submit', async function (e) {
     let usernameInput = document.getElementById('username-input');
     let passwordInput = document.getElementById('password-input');
     let passwordRetype = document.getElementById('password-retype');
-    let displayNameInput = document.getElementById('display-name-input')
+    let displayNameInput = document.getElementById('display-name-input');
 
     if (!(usernameInput.value == '' || passwordInput.value == '')) {
         console.log(`[signup.js] usernameInput.value = ${usernameInput.value}`);
@@ -108,13 +130,13 @@ loginForm.addEventListener('submit', async function (e) {
     let username = usernameInput.value;
     let password = passwordInput.value;
     let displayName = displayNameInput.value;
-    if (displayName == '') displayName = username
+    if (displayName == '') displayName = username;
 
     let isValid = await getServerResponse(
         username,
         password,
         passwordRetype.value,
-        displayName
+        displayName,
     );
     if (isValid) {
         alert('Successfully registered. Please log in again.');

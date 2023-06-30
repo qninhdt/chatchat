@@ -10,6 +10,23 @@ const server = 'http://localhost:8000/api/login';
 
 let loginForm = document.getElementById('login-form');
 
+//Get current user's info as JSON
+const getCurUserInfo = function () {
+    return JSON.parse(localStorage.getItem('userInfo'));
+};
+if (getCurUserInfo() != null) location.href ='friendlist.html';
+
+//Who logged in?
+let loginStatus = document.getElementsByClassName('login-status')[0];
+if (getCurUserInfo() == null) {
+    loginStatus.innerHTML = 'Please log in or sign up to get started.';
+} else {
+    let currentUser = document.getElementById('current-user');
+    currentUser.innerHTML = `Logged in as <strong>${
+        getCurUserInfo().display_name
+    }</strong> `;
+}
+
 //Check if an input box in the form is currently non-empty
 const checkInvalid = function () {
     const forms = document.querySelectorAll('.needs-validation');

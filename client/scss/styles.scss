@@ -75,6 +75,8 @@ h1 {
     .badge {
         --bs-badge-font-size: 1.25em;
         --bs-badge-font-weight: 0;
+        line-height: 1.6;
+        text-align: left;
     }
 
     #system-message {
@@ -101,5 +103,6 @@ h1 {
         border-radius: 0.5rem;
         padding: 0 1rem;
         margin-right: 0.25rem;
+        border: none;
     }
 }

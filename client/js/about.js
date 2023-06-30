@@ -1,6 +1,3 @@
-//index.js
-//script for index.html
-
 import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
@@ -9,7 +6,6 @@ import '../scss/styles.scss';
 const getCurUserInfo = function () {
     return JSON.parse(localStorage.getItem('userInfo'));
 };
-if (getCurUserInfo() != null) location.href ='friendlist.html';
 
 //Who logged in?
 let loginStatus = document.getElementsByClassName('login-status')[0];
@@ -21,3 +17,5 @@ if (getCurUserInfo() == null) {
         getCurUserInfo().display_name
     }</strong> `;
 }
+
+console.log(getCurUserInfo().display_name)

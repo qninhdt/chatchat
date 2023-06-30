@@ -29,10 +29,15 @@ const getUserInfoById = async function (_id) {
 };
 
 //Who logged in?
-let currentUser = document.getElementById('current-user');
-currentUser.innerHTML = `Logged in as <strong>${
-    getCurUserInfo().display_name
-}</strong> `;
+let loginStatus = document.getElementsByClassName('login-status')[0];
+if (getCurUserInfo() == null) {
+    loginStatus.innerHTML = 'Please log in or sign up to get started.';
+} else {
+    let currentUser = document.getElementById('current-user');
+    currentUser.innerHTML = `Logged in as <strong>${
+        getCurUserInfo().display_name
+    }</strong> `;
+}
 
 //Log out
 let logOutButton = document.getElementById('log-out-btn');

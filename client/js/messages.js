@@ -15,10 +15,15 @@ const getCurUserInfo = function () {
 };
 
 //Who logged in?
-let currentUser = document.getElementById('current-user');
-currentUser.innerHTML = `Logged in as <strong>${
-    getCurUserInfo().display_name
-}</strong> `;
+let loginStatus = document.getElementsByClassName('login-status')[0];
+if (getCurUserInfo() == null) {
+    loginStatus.innerHTML = 'Please log in or sign up to get started.';
+} else {
+    let currentUser = document.getElementById('current-user');
+    currentUser.innerHTML = `Logged in as <strong>${
+        getCurUserInfo().display_name
+    }</strong> `;
+}
 
 //Log out
 let logOutButton = document.getElementById('log-out-btn');
@@ -119,7 +124,7 @@ const displayOldMessages = async function (offsetLevel) {
     newerMessageButtonArea.innerHTML = '';
     if (offsetLevel != 0)
         newerMessageButtonArea.innerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" id="newer-messages-button" type="button">Load newer messages</button>`;
-    
+
     oldMessages.forEach((message) => {
         addMessageToDisplay(message);
         console.log(message);
