@@ -36,11 +36,11 @@ async function signupController(req, res) {
 
     const user = await getUserByUsername(username);
 
-    if (password && password.length == 0) {
+    if (!password || password.length == 0) {
         return res.status(400).json({ message: 'Password is required' });
     }
 
-    if (displayName && displayName.length == 0) {
+    if (!displayName || displayName.length == 0) {
         return res.status(400).json({ message: 'Display name is required' });
     }
 
