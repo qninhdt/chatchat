@@ -103,6 +103,18 @@ module.exports = {
 
         let acceptable = groupId == null ? false : true;
 
+        // check if idA and idB are already friend
+        let userA = await userModel.findById(idA);
+        let userB = await userModel.findById(idB);
+
+        if (!userA || !userB) {
+            return false;
+        }
+
+        if (userA.friend_ids.includes(idB) || userB.friend_ids.includes(idA)) {
+            return false;
+        }
+
         await userModel.findOneAndUpdate(
             {
                 _id: idA,
@@ -140,7 +152,7 @@ module.exports = {
             // },
         );
 
-        return acceptable;
+        return true;
     },
 };
 

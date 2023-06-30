@@ -51,15 +51,12 @@ async function addFriendController(req, res) {
         return res.status(400).json({ message: 'Cannot add yourself' });
     }
 
-    // check if friend is exist
-    const friend = getUserByUsername(req.body.friend_id);
-
-    if (!friend) {
-        return res.status(404).json({ message: 'Friend not found' });
-    }
-
     // update in database
-    await addFriend(req.user._id, req.body.friend_id);
+    let ok = await addFriend(req.user._id, req.body.friend_id);
+
+    if (!ok) {
+        return res.status(400).json({ message: 'Cannot add friend' });
+    }
 
     // emit event to 2 users
     const users = [req.user._id, req.body.friend_id];
