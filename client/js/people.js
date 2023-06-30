@@ -27,51 +27,57 @@ logOutButton.addEventListener('click', () => {
     location.href = 'index.html';
 });
 
-let allUsersInfo = [
-    {
-        username: 'qninhdeptrai',
-        display_name: 'Qninh Dep Zai',
-        _id: '649d3f0a6921366225a29088',
-    },
-    {
-        username: 'lmao',
-        display_name: 'Lmao Zedong',
-        _id: '649d3fad6921366225a2908b',
-    },
-    {
-        username: 'thattinh123',
-        display_name: 'That tinh 123',
-        _id: '649d82f1ec5fa351a0f6ee29',
-    },
-    {
-        username: 'ambatukam',
-        display_name: 'Anh Ba Xỉn',
-        _id: '649e5a9e8e7d3bf040effa46',
-    },
-    {
-        username: 'ambatunat',
-        display_name: 'Anh Ba Xỉn',
-        _id: '649e5a9e8e7d3bf040effa46',
-    },
-];
+const getAllUsersInfo = async function () {
+    let response = await fetch('http://localhost:8000/api/users/', {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    let json = await response.json();
+    return json.users;
+};
 
 let findUserInputForm = document.getElementById('find-user-input-form');
 let findUserResult = document.getElementById('find-user-result');
-findUserInputForm.addEventListener('submit', (e) => {
+let addFriendButtons = document.getElementsByClassName('add-friend-button');
+findUserInputForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     let findUserInput = document.getElementById('find-user-input');
     let query = findUserInput.value;
     if (query.length == 0) return;
 
     findUserResult.innerHTML = '';
+    let allUsersInfo = await getAllUsersInfo();
     allUsersInfo.forEach((user) => {
         if (
             user.username.search(new RegExp(query, 'i')) != -1 ||
             user.display_name.search(new RegExp(query, 'i')) != -1
         ) {
             let newLi = document.createElement('li');
-            newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary">${user.display_name} (@${user.username})</button></div>`;
+            newLi.innerHTML = `<div class="d-grid"><button type="button" class="btn btn-outline-primary add-friend-button" id="${user._id}">${user.display_name} (@${user.username})</button></div>`;
             findUserResult.appendChild(newLi);
         }
     });
+    addFriendButtons = document.getElementsByClassName('add-friend-button');
+    console.log(addFriendButtons);
+    for (let element of addFriendButtons) {
+        console.log(element);
+        element.addEventListener('click', async () => {
+            let response = await fetch('http://localhost:8000/api/friends/', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    friend_id: element.id,
+                }),
+            });
+            let json = await response.json();
+            let msg = json.message;
+            alert(msg);
+        });
+    }
 });
