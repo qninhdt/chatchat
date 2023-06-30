@@ -60,9 +60,8 @@ const infoFirstCheck = function (username, password, password2) {
     return 1;
 };
 
-//Post {username, password} to the server
-//Please give me validation information (passed or not) (new username cannot coincide with registered ones)
-const getServerResponse = async function (username, password, password2) {
+//Post {username, password, display_name} to the server (after some validation) 
+const getServerResponse = async function (username, password, password2, displayName) {
     if (!infoFirstCheck(username, password, password2)) return 0;
 
     let response = await fetch(server, {
@@ -73,9 +72,9 @@ const getServerResponse = async function (username, password, password2) {
         body: JSON.stringify({
             username: username,
             password: password,
+            display_name: displayName
         }),
     });
-    // localStorage.setItem('jwtToken', token);
     let json = await response.json();
     let status = response.status;
     if (status == 404) {
@@ -83,10 +82,8 @@ const getServerResponse = async function (username, password, password2) {
         return 0;
     }
 
-    let jwtToken = await json.token;
-    localStorage.setItem('jwtToken', jwtToken);
-
-    // localStorage.setItem("jwtToken", token)
+    // let jwtToken = await json.token;
+    // localStorage.setItem('jwtToken', jwtToken);
 
     return 1;
 };
@@ -98,6 +95,7 @@ loginForm.addEventListener('submit', async function (e) {
     let usernameInput = document.getElementById('username-input');
     let passwordInput = document.getElementById('password-input');
     let passwordRetype = document.getElementById('password-retype');
+    let displayNameInput = document.getElementById('display-name-input')
 
     if (!(usernameInput.value == '' || passwordInput.value == '')) {
         console.log(`[signup.js] usernameInput.value = ${usernameInput.value}`);
@@ -109,19 +107,19 @@ loginForm.addEventListener('submit', async function (e) {
 
     let username = usernameInput.value;
     let password = passwordInput.value;
+    let displayName = displayNameInput.value;
+    if (displayName == '') displayName = username
 
     let isValid = await getServerResponse(
         username,
         password,
         passwordRetype.value,
+        displayName
     );
     if (isValid) {
-        alert('Successfully registered.');
-        location.href = 'friendlist.html';
-        localStorage.setItem('username', username);
+        alert('Successfully registered. Please log in again.');
+        location.href = 'login.html';
     }
-
-    localStorage.setItem('curUser', username);
 });
 
 checkInvalid();

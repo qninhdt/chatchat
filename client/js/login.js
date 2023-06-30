@@ -31,7 +31,6 @@ const checkInvalid = function () {
 };
 
 //Get response from the server
-//Please give me validation information (passed/not passed)
 const getServerResponse = async function (username, password) {
     let response = await fetch(server, {
         method: 'POST',

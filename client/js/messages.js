@@ -36,9 +36,13 @@ console.log(chatGuest);
 
 //Display the newest message
 const addMessageToDisplay = function (message) {
-    let messageArea = document.getElementsByClassName('message-area')[0];
+    let messageArea = document.getElementById('message-display-area');
     let newDiv = document.createElement('div');
-    newDiv.innerHTML = `<span class="badge rounded-pill text-bg-${message.displayType} message ${message.type}">${message.content}</span>`;
+    if (message.type == 'system-message') {
+        newDiv.innerHTML = `<span id="system-message">${message.content}</span>`;
+    } else {
+        newDiv.innerHTML = `<span class="badge rounded-pill text-bg-${message.displayType} message ${message.type}">${message.content}</span>`;
+    }
     messageArea.appendChild(newDiv);
 };
 
@@ -47,7 +51,7 @@ const getMessages = async function (offset, limit) {
     let response = await fetch(
         `http://localhost:8000/api/groups/${localStorage.getItem(
             'chatGroup',
-        )}/messages`,
+        )}/messages?offset=${offset}&limit=${limit}`,
         {
             method: 'GET',
             headers: {
@@ -57,6 +61,7 @@ const getMessages = async function (offset, limit) {
         },
     );
     let json = await response.json();
+    console.log(json);
     return json.messages;
 };
 
@@ -70,11 +75,11 @@ const getOldMessages = async function (offsetLevel) {
 
     json.forEach((element) => {
         let curMsg = {};
-        if (element.group_id == localStorage.getItem('chatGroup')) {
+        if (element.groupId == localStorage.getItem('chatGroup')) {
             curMsg.content = element.content;
             if (
-                element.sender_id ==
-                JSON.parse(localStorage.getItem('curUserInfo'))._id
+                element.senderId ==
+                JSON.parse(localStorage.getItem('userInfo'))._id
             ) {
                 curMsg.type = 'host-message';
                 curMsg.displayType = 'primary';
@@ -82,31 +87,83 @@ const getOldMessages = async function (offsetLevel) {
                 curMsg.type = 'guest-message';
                 curMsg.displayType = 'secondary';
             }
+            // console.log(element.sender_id);
+            // console.log(JSON.parse(localStorage.getItem('userInfo'))._id)
             oldMessages.push(curMsg);
         }
     });
+    oldMessages.reverse();
     console.log(oldMessages);
     return oldMessages;
 };
 
 //Display old messages
-const displayOldMessages = async function () {
-    let oldMessages = await getOldMessages(0);
+const displayOldMessages = async function (offsetLevel) {
+    console.log(offsetLevel);
 
-    oldMessages.forEach((message) => addMessageToDisplay);
+    let messageArea = document.getElementById('message-display-area');
+    messageArea.innerHTML = '';
+
+    let oldMessages = await getOldMessages(offsetLevel);
+
+    let olderMessageButtonArea = document.getElementById(
+        'older-messages-button-area',
+    );
+    olderMessageButtonArea.innerHTML = '';
+    if (oldMessages.length >= MESSAGE_DISPLAY_LIMIT)
+        olderMessageButtonArea.innerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" id="older-messages-button" type="button">Load older messages</button>`;
+
+    let newerMessageButtonArea = document.getElementById(
+        'newer-messages-button-area',
+    );
+    newerMessageButtonArea.innerHTML = '';
+    if (offsetLevel != 0)
+        newerMessageButtonArea.innerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" id="newer-messages-button" type="button">Load newer messages</button>`;
+    
+    oldMessages.forEach((message) => {
+        addMessageToDisplay(message);
+        console.log(message);
+    });
+
+    if (oldMessages.length == 0)
+        addMessageToDisplay({
+            content: `There's nothing here.`,
+            type: 'system-message',
+        });
+
+    let olderMessageButton = document.getElementById('older-messages-button');
+    if (olderMessageButton != null) {
+        olderMessageButton.addEventListener('click', () => {
+            displayOldMessages(offsetLevel + 1);
+        });
+    }
+
+    let newerMessageButton = document.getElementById('newer-messages-button');
+    if (newerMessageButton != null) {
+        newerMessageButton.addEventListener('click', () => {
+            displayOldMessages(offsetLevel - 1);
+        });
+    }
 };
-displayOldMessages();
 
-let socket = io();
+displayOldMessages(0);
+
+let socket = io('localhost:8000', {
+    extraHeaders: {
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+    },
+});
 let messageInputForm = document.getElementById('message-input-form');
 var messageInput = document.getElementById('message-input');
+
+console.log(localStorage.getItem('chatGroup'));
 
 messageInputForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (messageInput.value) {
         socket.emit('new_message', {
             content: messageInput.value,
-            group_id: localStorage.getItem('chatGroup'),
+            groupId: localStorage.getItem('chatGroup'),
         });
         let message = {
             content: messageInput.value,

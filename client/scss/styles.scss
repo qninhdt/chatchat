@@ -52,7 +52,12 @@ h1 {
     }
 }
 
-.message-area {
+#older-messages-button-area, #newer-messages-button-area {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#message-display-area {
     display: flex;
     flex-direction: column;
     
@@ -70,6 +75,14 @@ h1 {
     .badge {
         --bs-badge-font-size: 1.25em;
         --bs-badge-font-weight: 0;
+    }
+
+    #system-message {
+        display: flex;
+        justify-content: center;
+        font-size: small;
+        color: gray;
+        margin-bottom: 10px;
     }
 }
 
