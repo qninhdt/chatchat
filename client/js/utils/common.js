@@ -2,11 +2,13 @@
 //contains constants and functions used in other files
 export const LOCALHOST_SERVER = 'http://localhost:8000';
 export const ONLINE_SERVER = 'https://chatchat-4z4u.onrender.com';
-export const SERVER = ONLINE_SERVER;
+export const SERVER = location.href.includes('localhost')
+    ? LOCALHOST_SERVER
+    : ONLINE_SERVER;
 export const LOGIN_API = SERVER + '/api/login';
 export const SIGNUP_API = SERVER + '/api/signup';
 export const USERS_API = SERVER + '/api/users';
-export const ADD_FRIEND_API = SERVER + '/api/friends'
+export const ADD_FRIEND_API = SERVER + '/api/friends';
 export const GROUPS_API = SERVER + '/api/groups';
 
 //Get current user's info as JSON (saved in local storage)
@@ -46,7 +48,7 @@ export const getFriendsInfo = function () {
 };
 
 //Display components of the navigation bar (log out button and accompanied text)
-export const navBarComps = function() {
+export const navBarComps = function () {
     //Who logged in?
     let loginStatus = document.getElementsByClassName('login-status')[0];
     if (getCurUserInfo() == null) {
@@ -63,7 +65,7 @@ export const navBarComps = function() {
             location.href = 'index.html';
         });
     }
-}
+};
 
 //Check if an input box in the form is currently non-empty
 export const checkInvalid = function () {

@@ -5,8 +5,14 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 import '../scss/styles.scss';
 
-import { GROUPS_API } from './utils/common';
-import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo, getFriendsInfo } from './utils/common';
+import { GROUPS_API, SERVER } from './utils/common';
+import {
+    getCurUserInfo,
+    navBarComps,
+    getUserInfoById,
+    getAllUsersInfo,
+    getFriendsInfo,
+} from './utils/common';
 
 const MESSAGE_DISPLAY_LIMIT = 20;
 const MESSAGE_LENGTH_LIMIT = 999;
@@ -39,9 +45,10 @@ const addMessageToDisplay = function (message) {
 //Get ${limit} latest messages, from ${offset} to ${offset + limit - 1}
 const getMessages = async function (offset, limit) {
     let response = await fetch(
-        GROUPS_API +`/${localStorage.getItem(
-            'chatGroup',
-        )}/messages?offset=${offset}&limit=${limit}`,
+        GROUPS_API +
+            `/${localStorage.getItem(
+                'chatGroup',
+            )}/messages?offset=${offset}&limit=${limit}`,
         {
             method: 'GET',
             headers: {
@@ -131,7 +138,7 @@ const displayOldMessages = async function (offsetLevel) {
 
 displayOldMessages(0);
 
-let socket = io('localhost:8000', {
+let socket = io(SERVER, {
     extraHeaders: {
         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
     },
