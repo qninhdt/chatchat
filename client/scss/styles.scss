@@ -5,6 +5,24 @@
     margin: auto;
 }
 
+.navbar-brand {
+    @font-face {
+        font-family: nhapp;
+        src: url('font/chu66.ttf');
+        font-weight: bold;
+    }
+    font-family: nhapp;
+    background-color: aquamarine;
+}
+
+.nav-item{
+    @font-face {
+        font-family: nhapp2;
+        src: url('font/chu66.ttf');
+    }
+    font-family: nhapp2;
+}
+
 h1 {
     margin-bottom: 20px;
     text-align: center;
