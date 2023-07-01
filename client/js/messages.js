@@ -1,7 +1,12 @@
+//messages.js
+//script for messages.html
 import * as bootstrap from 'bootstrap';
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 import '../scss/styles.scss';
+
+import { GROUPS_API } from './utils/common';
+import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo, getFriendsInfo } from './utils/common';
 
 const MESSAGE_DISPLAY_LIMIT = 20;
 const MESSAGE_LENGTH_LIMIT = 999;
@@ -11,28 +16,7 @@ if (localStorage.getItem('chatGroup') == null)
     location.href = 'friendlist.html';
 if (localStorage.getItem('username') == null) location.href = 'index.html';
 
-//Get current user's info as JSON
-const getCurUserInfo = function () {
-    return JSON.parse(localStorage.getItem('userInfo'));
-};
-
-//Who logged in?
-let loginStatus = document.getElementsByClassName('login-status')[0];
-if (getCurUserInfo() == null) {
-    loginStatus.innerHTML = 'Please log in or sign up to get started.';
-} else {
-    let currentUser = document.getElementById('current-user');
-    currentUser.innerHTML = `Logged in as <strong>${
-        getCurUserInfo().display_name
-    }</strong> `;
-}
-
-//Log out
-let logOutButton = document.getElementById('log-out-btn');
-logOutButton.addEventListener('click', () => {
-    localStorage.clear();
-    location.href = 'index.html';
-});
+navBarComps();
 
 //Display chat guest's username
 let chatGuest = localStorage.getItem('chatGuest');
@@ -55,7 +39,7 @@ const addMessageToDisplay = function (message) {
 //Get ${limit} latest messages, from ${offset} to ${offset + limit - 1}
 const getMessages = async function (offset, limit) {
     let response = await fetch(
-        `http://localhost:8000/api/groups/${localStorage.getItem(
+        GROUPS_API +`/${localStorage.getItem(
             'chatGroup',
         )}/messages?offset=${offset}&limit=${limit}`,
         {

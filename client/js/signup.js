@@ -5,46 +5,13 @@ import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
-const server = 'http://localhost:8000/api/signup';
+import { SIGNUP_API } from './utils/common';
+import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo, getFriendsInfo } from './utils/common';
+import { checkInvalid } from './utils/common';
 
 let loginForm = document.getElementById('login-form');
 
-//Get current user's info as JSON
-const getCurUserInfo = function () {
-    return JSON.parse(localStorage.getItem('userInfo'));
-};
-if (getCurUserInfo() != null) location.href = 'friendlist.html';
-
-//Who logged in?
-let loginStatus = document.getElementsByClassName('login-status')[0];
-if (getCurUserInfo() == null) {
-    loginStatus.innerHTML = 'Please log in or sign up to get started.';
-} else {
-    let currentUser = document.getElementById('current-user');
-    currentUser.innerHTML = `Logged in as <strong>${
-        getCurUserInfo().display_name
-    }</strong> `;
-}
-
-//Check if an input box in the form is currently non-empty
-const checkInvalid = function () {
-    const forms = document.querySelectorAll('.needs-validation');
-
-    Array.from(forms).forEach((form) => {
-        form.addEventListener(
-            'submit',
-            (event) => {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-
-                form.classList.add('was-validated');
-            },
-            false,
-        );
-    });
-};
+navBarComps();
 
 //Check if the given username or password is valid
 const infoFirstCheck = function (username, password, password2) {
@@ -86,7 +53,7 @@ const getServerResponse = async function (
 ) {
     if (!infoFirstCheck(username, password, password2)) return 0;
 
-    let response = await fetch(server, {
+    let response = await fetch(SIGNUP_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

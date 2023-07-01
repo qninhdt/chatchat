@@ -1,64 +1,26 @@
+//friendlist.js
+//script for friendlist.html
 import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
+import { USERS_API } from './utils/common';
+import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo, getFriendsInfo } from './utils/common';
+
 if (localStorage.getItem('userInfo') == null) location.href = 'index.html';
 
-//Get current user's info as JSON
-const getCurUserInfo = function () {
-    return JSON.parse(localStorage.getItem('userInfo'));
-};
+navBarComps();
 
-//Get current user's friends' info as JSON
-const getFriendsInfo = function () {
-    return JSON.parse(localStorage.getItem('friendsInfo'));
-};
-
-//Get users data by UID
-//Return this user's info as json
-const getUserInfoById = async function (_id) {
-    let response = await fetch(`http://localhost:8000/api/users/${_id}`, {
+//Set up the friendlist
+//Returns the friendlist as an array of ojects
+const setupFriends = async function () {
+    let response = await fetch(USERS_API + `/${getCurUserInfo()._id}/friends`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
             'Content-Type': 'application/json',
         },
     });
-    let json = await response.json();
-    return json;
-};
-
-//Who logged in?
-let loginStatus = document.getElementsByClassName('login-status')[0];
-if (getCurUserInfo() == null) {
-    loginStatus.innerHTML = 'Please log in or sign up to get started.';
-} else {
-    let currentUser = document.getElementById('current-user');
-    currentUser.innerHTML = `Logged in as <strong>${
-        getCurUserInfo().display_name
-    }</strong> `;
-}
-
-//Log out
-let logOutButton = document.getElementById('log-out-btn');
-logOutButton.addEventListener('click', () => {
-    localStorage.clear();
-    location.href = 'index.html';
-});
-
-//Set up the friendlist
-//Returns the friendlist as an array of ojects
-const setupFriends = async function () {
-    let response = await fetch(
-        `http://localhost:8000/api/users/${getCurUserInfo()._id}/friends`,
-        {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-                'Content-Type': 'application/json',
-            },
-        },
-    );
     let json = await response.json();
 
     for (let i = 0; i < getCurUserInfo().friend_ids.length; i++) {
