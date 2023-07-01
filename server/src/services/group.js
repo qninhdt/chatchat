@@ -20,6 +20,11 @@ let groupModel = mongoose.model('Groups', groupSchema);
 */
 
 module.exports = {
+    /**
+    *
+    * @param {id} id of group
+    * @returns document of group that is searched if group is founded, no otherwise
+    */
     getGroup: async function (id) {
         let group = null;
 

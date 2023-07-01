@@ -1,4 +1,4 @@
-@import "node_modules/bootstrap/scss/bootstrap";
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 .wrap {
     width: 600px;
@@ -6,21 +6,10 @@
 }
 
 .navbar-brand {
-    @font-face {
-        font-family: nhapp;
-        src: url('font/chu66.ttf');
-        font-weight: bold;
-    }
     font-family: nhapp;
     background-color: aquamarine;
 }
-
-.nav-item{
-    @font-face {
-        font-family: nhapp2;
-        src: url('font/chu71.ttf');
-        font-size: large;
-    }
+.nav-item {
     font-family: nhapp2;
 }
 
@@ -46,24 +35,24 @@ h1 {
         display: inline;
     }
     // #current-user {
-        
+
     // }
     button {
-        --bs-btn-padding-y: .25rem; 
-        --bs-btn-padding-x: .5rem; 
-        --bs-btn-font-size: .75rem;
+        --bs-btn-padding-y: 0.25rem;
+        --bs-btn-padding-x: 0.5rem;
+        --bs-btn-font-size: 0.75rem;
     }
 }
 
-.friend-list, #find-user-result {
+.friend-list,
+#find-user-result {
     padding-left: 0;
     li {
-        button{
+        button {
             text-align: left;
         }
         list-style-type: none;
         margin-bottom: 10px;
-        
     }
 }
 
@@ -73,7 +62,8 @@ h1 {
     }
 }
 
-#older-messages-button-area, #newer-messages-button-area {
+#older-messages-button-area,
+#newer-messages-button-area {
     text-align: center;
     margin-bottom: 10px;
 }
@@ -81,7 +71,7 @@ h1 {
 #message-display-area {
     display: flex;
     flex-direction: column;
-    
+
     .message {
         margin-bottom: 15px;
     }
@@ -109,12 +99,13 @@ h1 {
     }
 }
 
-#message-input-form, #find-user-input-form {
-    // position: fixed; 
-    // bottom: 0; 
+#message-input-form,
+#find-user-input-form {
+    // position: fixed;
+    // bottom: 0;
     // left: 0;
     // right: 0;
-    display: flex; 
+    display: flex;
     width: 600px;
     // margin: auto;
     margin-bottom: 10px;
@@ -128,4 +119,3 @@ h1 {
         border: none;
     }
 }
-

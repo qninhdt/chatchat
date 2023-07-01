@@ -1,56 +1,15 @@
+//people.js
+//script for people.html
 import * as bootstrap from 'bootstrap';
 
 import '../scss/styles.scss';
 
+import { ADD_FRIEND_API } from './utils/common';
+import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo } from './utils/common';
+
 if (localStorage.getItem('userInfo') == null) location.href = 'index.html';
 
-//Get current user's info as JSON (saved in local storage)
-const getCurUserInfo = function () {
-    return JSON.parse(localStorage.getItem('userInfo'));
-};
-
-//Get any user info by uid as JSON (using http request)
-const getUserInfoById = async function (_id) {
-    let response = await fetch(`http://localhost:8000/api/users/${_id}`, {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    let json = await response.json();
-    return json;
-};
-
-//Who logged in?
-let loginStatus = document.getElementsByClassName('login-status')[0];
-if (getCurUserInfo() == null) {
-    loginStatus.innerHTML = 'Please log in or sign up to get started.';
-} else {
-    let currentUser = document.getElementById('current-user');
-    currentUser.innerHTML = `Logged in as <strong>${
-        getCurUserInfo().display_name
-    }</strong> `;
-}
-
-//Log out
-let logOutButton = document.getElementById('log-out-btn');
-logOutButton.addEventListener('click', () => {
-    localStorage.clear();
-    location.href = 'index.html';
-});
-
-const getAllUsersInfo = async function () {
-    let response = await fetch('http://localhost:8000/api/users/', {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    let json = await response.json();
-    return json.users;
-};
+navBarComps();
 
 let findUserInputForm = document.getElementById('find-user-input-form');
 let findUserResult = document.getElementById('find-user-result');
@@ -78,7 +37,7 @@ findUserInputForm.addEventListener('submit', async (e) => {
     for (let element of addFriendButtons) {
         console.log(element);
         element.addEventListener('click', async () => {
-            let response = await fetch('http://localhost:8000/api/friends/', {
+            let response = await fetch(ADD_FRIEND_API, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
