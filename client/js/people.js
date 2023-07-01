@@ -4,9 +4,22 @@ import '../scss/styles.scss';
 
 if (localStorage.getItem('userInfo') == null) location.href = 'index.html';
 
-//Get current user's info as JSON
+//Get current user's info as JSON (saved in local storage)
 const getCurUserInfo = function () {
     return JSON.parse(localStorage.getItem('userInfo'));
+};
+
+//Get any user info by uid as JSON (using http request)
+const getUserInfoById = async function (_id) {
+    let response = await fetch(`http://localhost:8000/api/users/${_id}`, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    let json = await response.json();
+    return json;
 };
 
 //Who logged in?
@@ -78,6 +91,12 @@ findUserInputForm.addEventListener('submit', async (e) => {
             let json = await response.json();
             let msg = json.message;
             alert(msg);
+            if (msg == 'Friend added successfully') {
+                let userInfo = await getUserInfoById(getCurUserInfo()._id);
+                // console.log(userInfo);
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            }
+            // console.log(getCurUserInfo());
         });
     }
 });
