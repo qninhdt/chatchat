@@ -98,7 +98,7 @@ async function onConnected(socket) {
 async function onDisconnected(socket) {
     // remove socket from socketMap
     const sockets = socketMap.get(socket._id);
-    sockets.delete(socket._id);
+    sockets.delete(socket);
 
     // remove user from groupMap
     const groups = (await getUserById(socket._id)).group_ids;

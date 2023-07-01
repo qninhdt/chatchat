@@ -5,7 +5,9 @@ async function getLastestMessagesController(req, res) {
     const { offset, limit } = req.query;
     const { id } = req.params;
 
-    // TODO: add logic to check if user is a member of the group later
+    if (!id) {
+        return res.status(400).json({ message: 'Missing group id' });
+    }
 
     const messages = await getMessage(id, Number(offset), Number(limit));
 

@@ -38,8 +38,6 @@ module.exports = {
     getAllUsers: async function () {
         return (await userModel.find()).map((user) => {
             delete user._doc.password;
-            delete user._doc.group_ids;
-            delete user._doc.friend_ids;
             return user;
         });
     },
@@ -99,10 +97,6 @@ module.exports = {
      * @returns True if relation is acceptable, False otherwise
      */
     addFriend: async function (idA, idB) {
-        let groupId = await group.createGroup([idA, idB]);
-
-        let acceptable = groupId == null ? false : true;
-
         // check if idA and idB are already friend
         let userA = await userModel.findById(idA);
         let userB = await userModel.findById(idB);
@@ -114,6 +108,8 @@ module.exports = {
         if (userA.friend_ids.includes(idB) || userB.friend_ids.includes(idA)) {
             return false;
         }
+
+        let groupId = await group.createGroup([idA, idB]);
 
         await userModel.findOneAndUpdate(
             {
