@@ -1,63 +1,7 @@
-# chatchat
-
-UET Codecamp project
-
-AE clone repo về rồi code trong ấy nhé
-
--   client: frontend
--   server: backend
-
-HTTP:
-
--   POST /api/signup { username, password } -> JWT token | null
--   POST /api/login { username, password } -> JWT token | null
--   GET /api/users/{id} -> User (ko co password)
--   GET /api/groups/{id}/messages -> danh sach tin nhan
--   POST /api/friends { friend_id } -> send friend request to <friend_id>
-
-Socket IO:
-
--   client to server:
-
-    -   "new_message"
-
--   server to client:
-    -   "new_message"
-    -   "new_friend"
-    -   "online"
-    -   "offline"
-
-Database: 
-
-<h3>DATABASE<h3>
-
-User Model:
-- _id
-- username
-- password
-- display_name
-- friendList: Danh sách id của bạn bè
-- group_ids: Danh sách id của group chat
-Group Model:
-- _id
-- members: Danh sách thành viên
-Message Model:
-- _id
-- createdAt
-- updatedAt
-- groupId
-- senderId
-- content
-
-Lưu ý: Các hàm dưới đây đều là hàm bất đồng bộ; nên trong trường hợp cần lấy giá trị trả về, mọi người vui lòng chờ bằng cách dùng promise hoặc async/await
-
--   user:
-    -   async getUserById(id) -> User
-    -   async getUserByUsername(userName) -> User
-    -   async createUser(username, md5(password)) -> User
-    -   async addFriend(user1, user2) (them vao nhom + them vao danh sach ban be) -> True/False
--   messages:
-    -   async getMessages(group_id, offset, limit) -> list of message
-    -   async createMessage(sender_id, group_id, content) -> True/False
--   group:
-    - async createGroup(listmember) -> True/Falses
+<h1><i>  chatChat - Hãy chat theo cách của bạn ! </i></h1>
+Một trang web giúp bạn có thể trò chuyện trực tuyến trên phạm vi toàn cầu bởi hình thức nhắn tin . <br />
+Một nơi có thể giúp bạn tìm kiếm bạn bè, chia sẻ những sở thích, suy nghĩ để có thể mở rộng thế giới quan của mình hơn . <br />
+Thế giới này ngập tràn những điều thú vị mà bạn có thể khám phá thông qua những người bạn trực tuyến của mình . <br />
+Thấu hiểu điều đó , chúng tôi ( các thành viên của chatChat team ) đã tạo ra một môi trường trực tuyến an toàn , tiện lợi để bạn có thể dễ dàng kết bạn và trò chuyện , chúng tôi cam kết rằng bạn sẽ có những trải nghiệm tuyệt vời khi sử dụng chatChat . <br />
+Chần chừ gì mà không thử ngay hả bạn ơi ? <br />
+( Để xem thông tin chi tiết về những thành viên của chatChat team , vui lòng xem thêm tại mục "About" của trang web )
