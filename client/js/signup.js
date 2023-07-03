@@ -9,6 +9,8 @@ import { SIGNUP_API } from './utils/common';
 import { getCurUserInfo, navBarComps, getUserInfoById, getAllUsersInfo, getFriendsInfo } from './utils/common';
 import { checkInvalid } from './utils/common';
 
+if (localStorage.getItem('userInfo') != null) location.href = 'friendlist.html';
+
 let loginForm = document.getElementById('login-form');
 
 navBarComps();
